@@ -150,7 +150,7 @@ def criar_tela_cadastro():
 
     # 'bg' foi removido para o label ficar transparente
     labelCpfCadastro = tk.Label(cadastro, text="CPF:", fg="black", font=("Helvetica", 16))
-    labelCpfCadastro.grid(row=2, column=0, padx=(0, 10), pady=10, sticky="e")git
+    labelCpfCadastro.grid(row=2, column=0, padx=(0, 10), pady=10, sticky="e")
     
     global cpfCadastro
     cpfCadastro = tk.Entry(cadastro, width=40, font=("Helvetica", 24))
