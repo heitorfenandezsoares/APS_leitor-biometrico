@@ -77,6 +77,11 @@ def criar_tela_inicial():
     cadastrar = tk.Button(inicial, text="Não fez o cadastro? Clique, aqui!", bd=0, fg="black", command=lambda: mostrar_tela(inicial, cadastro))
     cadastrar.grid(row=2, column=0, pady=5)
 
+
+
+
+
+
     # --- REMOVIDO bottom_filler (era o frame cinza) ---
 
     # Configuração de layout para centralização
@@ -98,10 +103,18 @@ def tela_login():
     
     # 'bg' foi removido para o label ficar transparente
     labelCpfCadastro = tk.Label(tela_logar, text="CPF:", fg="black", font=("Helvetica", 16))
-    labelCpfCadastro.grid(row=1, column=0, padx=(0, 10), pady=10, sticky="e")
+    labelCpfCadastro.grid(row=1, column=0, padx=(0, 10), pady=10, sticky="")
     
+    
+    # ---------------------------------- BOTAO TELA INICIAL ---------------------------------------------------
+    botao_voltar = tk.Button(janela, text="TELA INICIAL", borderwidth=2, highlightthickness=0, command=lambda: mostrar_tela(tela_logar, inicial))
+
+    # 3. Posicionar o botão na janela
+    botao_voltar.pack(pady=0, anchor="n") # Adiciona um espaçamento vertical
+
+
     global cpfLogin
-    cpfLogin = tk.Entry(tela_logar, width=40, font=("Helvetica", 24))
+    cpfLogin = tk.Entry(tela_logar, width=20, font=("Helvetica", 24))
     cpfLogin.grid(row=1, column=1, padx=(10, 0), pady=10, sticky="w")
     cpfLogin.bind("<KeyRelease>", aplicar_mascara_cpf)
 
@@ -139,22 +152,22 @@ def criar_tela_cadastro():
     cadastro = tk.Label(janela, image=background_image)
 
     # --- REMOVIDO top_filler ---
-
+    
     # 'bg' foi removido para o label ficar transparente
     labelNomeCadastro = tk.Label(cadastro, text="NOME:", fg="black", font=("Helvetica", 16))
-    labelNomeCadastro.grid(row=1, column=0, padx=(0, 10), pady=10, sticky="e")
+    labelNomeCadastro.grid(row=1, column=0, padx=(0, 10), pady=10, sticky="")
     
     global nomeCadastro
     nomeCadastro = tk.Entry(cadastro, width=40, font=("Helvetica", 24))
-    nomeCadastro.grid(row=1, column=1, padx=(10, 0), pady=10, sticky="w")
+    nomeCadastro.grid(row=1, column=1, padx=(10, 0), pady=10, sticky="")
 
     # 'bg' foi removido para o label ficar transparente
     labelCpfCadastro = tk.Label(cadastro, text="CPF:", fg="black", font=("Helvetica", 16))
-    labelCpfCadastro.grid(row=2, column=0, padx=(0, 10), pady=10, sticky="e")
+    labelCpfCadastro.grid(row=2, column=0, padx=(0, 10), pady=10, sticky="")
     
     global cpfCadastro
     cpfCadastro = tk.Entry(cadastro, width=40, font=("Helvetica", 24))
-    cpfCadastro.grid(row=2, column=1, padx=(10, 0), pady=10, sticky="w")
+    cpfCadastro.grid(row=2, column=1, padx=(10, 0), pady=10, sticky="")
     cpfCadastro.bind("<KeyRelease>", aplicar_mascara_cpf)
 
     global mensagem_cadastro
