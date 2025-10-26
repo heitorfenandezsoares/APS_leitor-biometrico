@@ -1,0 +1,9 @@
+blinker
+deepface
+mediapipe
+opencv-python
+numpy
+tensorflow
+pillow
+mysql-connector-python
+cvzone
