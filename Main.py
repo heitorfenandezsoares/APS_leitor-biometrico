@@ -48,8 +48,24 @@ def aplicar_mascara_cpf(event=None):
 
 #PRIMEIRO PARAMETRO ESCONDE, SEGUNDO, APARECE
 def mostrar_tela(frame_atual_esconde, frame_novo_aparece):
+    global tela_ativa_global  # Informa que vamos usar a variável global
+    
     frame_atual_esconde.pack_forget()
     frame_novo_aparece.pack(fill="both", expand=True)
+    
+    # Atualiza o rastreador da tela ativa
+    tela_ativa_global = frame_novo_aparece 
+    
+    # Gerencia a visibilidade do botão "Home"
+    if frame_novo_aparece == inicial:
+        # Se a nova tela é a INICIAL, esconde o botão
+        botao_voltar_home.place_forget()
+    else:
+        # Para qualquer OUTRA tela, mostra o botão no canto inferior esquerdo
+        botao_voltar_home.place(relx=0.0, rely=1.0, x=10, y=-10, anchor="sw")
+        
+        # Esta linha garante que o botão fique NA FRENTE da tela
+        botao_voltar_home.lift() 
 
 #janela
 def configurar_janela():
@@ -70,17 +86,12 @@ def criar_tela_inicial():
     
     # --- REMOVIDO top_filler (era o frame cinza) ---
     
-    buttonlogin = tk.Button(inicial, text="LOGIN", bd=0, bg="green", fg="black", font=("Helvetica", 18, 'bold'), width=20, command=lambda: mostrar_tela(inicial, tela_logar))
+    buttonlogin = tk.Button(inicial, text="LOGIN", bd=2, relief="solid", bg="green", fg="black", font=("Helvetica", 18, 'bold'), width=20, command=lambda: mostrar_tela(inicial, tela_logar))
     # Ajustado o 'row' para centralizar
     buttonlogin.grid(row=1, column=0, pady=10) 
 
-    cadastrar = tk.Button(inicial, text="Não fez o cadastro? Clique, aqui!", bd=0, fg="black", command=lambda: mostrar_tela(inicial, cadastro))
+    cadastrar = tk.Button(inicial, text="Não fez o cadastro? Clique, aqui!", bd=2, relief="solid", bg="green", fg="black", command=lambda: mostrar_tela(inicial, cadastro))
     cadastrar.grid(row=2, column=0, pady=5)
-
-
-
-
-
 
     # --- REMOVIDO bottom_filler (era o frame cinza) ---
 
@@ -106,11 +117,8 @@ def tela_login():
     labelCpfCadastro.grid(row=1, column=0, padx=(0, 10), pady=10, sticky="")
     
     
-    # ---------------------------------- BOTAO TELA INICIAL ---------------------------------------------------
-    botao_voltar = tk.Button(janela, text="TELA INICIAL", borderwidth=2, highlightthickness=0, command=lambda: mostrar_tela(tela_logar, inicial))
-
-    # 3. Posicionar o botão na janela
-    botao_voltar.pack(pady=0, anchor="n") # Adiciona um espaçamento vertical
+    # ---------------------------------- BOTAO TELA INICIAL REMOVIDO DAQUI ---------------------------------
+    # O botão agora é global e controlado pela função 'mostrar_tela'
 
 
     global cpfLogin
@@ -123,7 +131,7 @@ def tela_login():
     mensagem_login = tk.Label(tela_logar, text='', font=("Helvetica", 16, "bold"), fg='black')
     mensagem_login.grid(row=2, column=0, columnspan=2, pady=10)
 
-    logar = tk.Button(tela_logar, text="ENTRAR", font=("Helvetica", 16), command=entrar_login)
+    logar = tk.Button(tela_logar, text="ENTRAR", font=("Helvetica", 16), bd=2, relief="solid", bg="green", fg="black", command=entrar_login)
     logar.grid(row=3, column=0, columnspan=2, pady=10)
 
     # --- REMOVIDO bottom_filler ---
@@ -175,7 +183,7 @@ def criar_tela_cadastro():
     mensagem_cadastro = tk.Label(cadastro, text='', font=("Helvetica", 16, "bold"), fg='black')
     mensagem_cadastro.grid(row=3, column=0, columnspan=2, pady=10)
 
-    botao_enviar_banco = tk.Button(cadastro, text="ENVIAR", font=("Helvetica", 20), command=enviar_cadastro)
+    botao_enviar_banco = tk.Button(cadastro, text="ENVIAR", font=("Helvetica", 20), bd=2, relief="solid", bg="green", fg="black", command=enviar_cadastro)
     botao_enviar_banco.grid(row=4, column=0, columnspan=2, pady=10)
 
     # --- REMOVIDO bottom_filler ---
@@ -211,10 +219,8 @@ def criar_tela_cadastro_facial(tipo):
     # --- MUDANÇA PRINCIPAL ---
     # Esta tela (que usa .pack()) também vira um Label com a imagem
     cadastroFacial = tk.Label(janela, image=background_image)
-
-    # Não precisamos mais do if background_image e bg_label
     
-    button_iniciar = tk.Button(cadastroFacial, text="INICIAR CAPTURA FACIAL", command=iniciar_captura, font=("Helvetica", 16))
+    button_iniciar = tk.Button(cadastroFacial, text="INICIAR CAPTURA FACIAL", command=iniciar_captura, font=("Helvetica", 16), bd=2, relief="solid", bg="green", fg="black")
     button_iniciar.pack(pady=20)
 
     # 'bg' removido para transparência
@@ -226,10 +232,15 @@ def criar_tela_cadastro_facial(tipo):
     mensagem_resultado = tk.Label(cadastroFacial, font=("Helvetica", 16), fg='black')
     mensagem_resultado.pack(pady=10)
 
+
+    # --- REVERTIDO ---
+    # Removemos o 'fundo_video_branco'
+    # O imagem_label é filho direto do 'cadastroFacial' (que tem o background)
     global imagem_label
     # 'bg' removido para transparência
-    imagem_label = tk.Label(cadastroFacial)
-    imagem_label.pack(pady=10)
+    imagem_label = tk.Label(cadastroFacial) 
+    imagem_label.pack(pady=10, padx=20) # Simplesmente empacota
+    # --- FIM DA MUDANÇA ---
 
     global sinal_qual_botao_clicou
     sinal_qual_botao_clicou = tipo
@@ -295,7 +306,8 @@ def plataformaMeioAmbiente(nome, permissao):
     
     texto_bem_vindo = "BEM VINDO!"
     if nome and permissao:
-        texto_bem_vindo = f"BEM VINDO! {nome}, {permissao} da Plataforma Meio Ambiente."
+        # --- MUDANÇA AQUI ---
+        texto_bem_vindo = f"Acesso Liberado ao! {nome}, {permissao}. \n\nSistema de Segurança de acesso exclusivo\ndo Ministerio do Meio Ambiente."
 
     # 'bg' removido para transparência
     labelMeioAmbiente = tk.Label(meioAmbiente, text=texto_bem_vindo, fg="black", font=("Helvetica", 16))
@@ -323,6 +335,22 @@ except Exception as e:
     print(f"Erro ao carregar Background.jpg: {e}")
     background_image = None
 
+# --- ADICIONADO ---
+# Variável para rastrear a tela ativa
+tela_ativa_global = None
+
+# Função para o botão home global
+def mostrar_tela_home():
+    # Verifica se a tela ativa não é None e não é a própria tela inicial
+    if tela_ativa_global is not None and tela_ativa_global != inicial:
+        mostrar_tela(tela_ativa_global, inicial)
+
+# Botão "Home" global, que pertence à janela principal
+botao_voltar_home = tk.Button(janela, text="< TELA INICIAL", bd=2, relief="solid", fg="black", font=("Helvetica", 12), 
+                              highlightthickness=0, bg="green", command=mostrar_tela_home)
+# Note: Não usamos .pack() ou .place() aqui. A função 'mostrar_tela' fará isso.
+# --- FIM DA ADIÇÃO ---
+
 # Cria todas as telas (frames)
 inicial = criar_tela_inicial()
 cadastro = criar_tela_cadastro()
@@ -335,4 +363,10 @@ sinal_meioAmbiente()
 
 #CHAMA A TELA INICIAL
 inicial.pack(fill="both", expand=True)
+
+# --- ADICIONADO ---
+# Define a tela inicial como a tela ativa global
+tela_ativa_global = inicial
+# --- FIM DA ADIÇÃO ---
+
 janela.mainloop()
